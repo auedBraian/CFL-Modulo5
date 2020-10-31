@@ -57,13 +57,17 @@ use CFL2020_data;
 	select nro_cliente from e01_factura where nro_factura in(
 	select nro_factura from e01_detalle_factura where codigo_producto in(
 	select codigo_producto from e01_producto where nombre like 'scales' )));
--- Ceci lo tiene hecho con exist
-    
-    
-    
-    
-    
 
+-- Mismo caso con exist
+
+    select * from e01_cliente where
+    exists(select nro_cliente,nro_factura 
+    from e01_factura where exists
+    (select nro_factura from e01_detalle_factura where exists
+    ( select * from e01_producto where e01_producto.codigo_producto = e01_detalle_factura.codigo_producto
+    and nombre = 'scales')and e01_detalle_factura.nro_factura=e01_factura.nro_factura)
+	and e01_cliente.nro_cliente=e01_factura.nro_cliente);
+   
 -- 5 - alguno de los anteriores resolverlo con EXIST (NOT EXIST) y con ANY
 	
     -- Punto 4 resuelto con any
@@ -73,10 +77,14 @@ use CFL2020_data;
 
 -- 6 - mostrar los codigos de área de los clientes del punto 4
 
-	Select codigo_area, nro_cliente from e01_telefono where nro_cliente in (
-    Select nro_cliente from e01_cliente where nro_cliente in (
-	select nro_cliente from e01_detalle_factura where codigo_producto
-	= (Select codigo_producto from e01_producto where nombre = 'scales')));
+	Select codigo_area from e01_telefono where nro_cliente in (
+    select nro_cliente from e01_cliente where nro_cliente in(
+	select nro_cliente from e01_factura where nro_factura in(
+	select nro_factura from e01_detalle_factura where codigo_producto in(
+	select codigo_producto from e01_producto where nombre like 'scales' ))));
+
+    
+
 
 ----------------------------------- Consultas adicionales --------------------------------------------
 
