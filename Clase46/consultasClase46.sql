@@ -52,10 +52,17 @@ use CFL2020_data;
 	select nro_cliente from e01_telefono where codigo_area = 296);
 
 -- 4 - mostrarme todos los clientes que compraron el producto cuyo nombre = 'scales'
-
-	Select * from e01_cliente where nro_cliente in (
-	select nro_cliente from e01_detalle_factura where codigo_producto
-	=  (Select codigo_producto from e01_producto where nombre = 'scales'));
+    
+    select * from e01_cliente where nro_cliente in(
+	select nro_cliente from e01_factura where nro_factura in(
+	select nro_factura from e01_detalle_factura where codigo_producto in(
+	select codigo_producto from e01_producto where nombre like 'scales' )));
+-- Ceci lo tiene hecho con exist
+    
+    
+    
+    
+    
 
 -- 5 - alguno de los anteriores resolverlo con EXIST (NOT EXIST) y con ANY
 	
